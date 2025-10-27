@@ -2,9 +2,14 @@
 
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
-from server.models.user import User
-from server.schemas.user_schema import UserSchema, user_schema, users_schema
-from server.extensions import db
+try:
+    from server.models.user import User
+    from server.schemas.user_schema import UserSchema, user_schema, users_schema
+    from server.extensions import db
+except ImportError:
+    from models.user import User
+    from schemas.user_schema import UserSchema, user_schema, users_schema
+    from extensions import db
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity
 

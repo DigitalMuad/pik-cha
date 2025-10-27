@@ -6,7 +6,11 @@ from flask_restful import Api
 from sqlalchemy import MetaData
 from sqlalchemy.orm import declarative_base
 from dotenv import load_dotenv
-from server.extensions import db, migrate, jwt
+try:
+    from server.extensions import db, migrate, jwt
+except ImportError:
+    # When running from within the `server/` directory
+    from extensions import db, migrate, jwt
 
 
 # Load .env variables

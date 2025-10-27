@@ -1,9 +1,16 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource
-from server.models.user import User
-from server.schemas.user_schema import UserSchema
-from server.config import db
-from server.utils.jwt_handler import generate_token, decode_token
+try:
+    from server.models.user import User
+    from server.schemas.user_schema import UserSchema
+    from server.config import db
+    from server.utils.jwt_handler import generate_token, decode_token
+except ImportError:
+    # When running from within the `server/` directory
+    from models.user import User
+    from schemas.user_schema import UserSchema
+    from config import db
+    from utils.jwt_handler import generate_token, decode_token
 
 # Define the Blueprint
 auth_bp = Blueprint("auth", __name__)

@@ -9,11 +9,18 @@ import os
 import uuid
 from io import BytesIO
 
-from server.config import db
-from server.models.image import Image
-from server.models.user import User
-from server.schemas.image_schema import ImageSchema
-from server.utils.jwt_handler import decode_token
+try:
+    from server.config import db
+    from server.models.image import Image
+    from server.models.user import User
+    from server.schemas.image_schema import ImageSchema
+    from server.utils.jwt_handler import decode_token
+except ImportError:
+    from config import db
+    from models.image import Image
+    from models.user import User
+    from schemas.image_schema import ImageSchema
+    from utils.jwt_handler import decode_token
 
 # Define the Blueprint
 image_bp = Blueprint("image", __name__)
