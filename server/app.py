@@ -14,7 +14,7 @@ import os
 from flask import send_from_directory, current_app
 
 # Create app instance
-app = create_app()
+app = create_app("production") if os.getenv("FLASK_ENV") == "production" else create_app()
 
 # Configure JWT
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'pikcha-jwt-secret-key-2024')

@@ -40,7 +40,7 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL") or "sqlite:///../instance/pikcha.db"
 
 
 class TestingConfig(Config):
@@ -50,7 +50,7 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL") or "sqlite:///../instance/pikcha.db"
 
 
 # Mapping
@@ -78,4 +78,8 @@ def create_app(config_name="development"):
     app.secret_key = app.config["SECRET_KEY"]
     app.json.compact = False
 
+    # Create tables if they don't exist (for deployment)
+    with app.app_context():
+        db.create_all()
+    
     return app
