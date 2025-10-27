@@ -63,21 +63,37 @@ class SignupResource(Resource):
 
 class LoginResource(Resource):
     def post(self):
-        data = request.get_json()
-        email = data.get("email")
-        password = data.get("password")
+        try:
+            data = request.get_json()
+            print(f"Login request received: {data}")
+            
+            if not data:
+                return {"error": "No data provided"}, 400
+            
+            email = data.get("email")
+            password = data.get("password")
 
-        user = User.query.filter_by(email=email).first()
-        if not user or not user.check_password(password):
-            return {"error": "Invalid email or password"}, 401
+            if not email or not password:
+                return {"error": "Email and password are required"}, 400
 
-        access_token = generate_token(user.id)
+            user = User.query.filter_by(email=email).first()
+            if not user or not user.check_password(password):
+                return {"error": "Invalid email or password"}, 401
 
-        return {
-            "message": "Login successful",
-            "user": user_schema.dump(user),
-            "access_token": access_token
-        }, 200
+            access_token = generate_token(user.id)
+            
+            print(f"Login successful for user: {user.username}")
+
+            return {
+                "message": "Login successful",
+                "user": user_schema.dump(user),
+                "access_token": access_token
+            }, 200
+        except Exception as e:
+            print(f"Error in login: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return {"error": f"Login failed: {str(e)}"}, 500
 
 class MeResource(Resource):
     def get(self):
