@@ -1,7 +1,14 @@
-from server.config import create_app, db, api
-from server.routes.user import UserResource, UserListResource, user_bp
-from server.routes.auth import SignupResource, LoginResource, MeResource, auth_bp
-from server.routes.image import UploadImageResource, ListImagesResource, TransformImageResource, DownloadImageResource, ImageDetailResource, image_bp
+try:
+    from server.config import create_app, db, api
+    from server.routes.user import UserResource, UserListResource, user_bp
+    from server.routes.auth import SignupResource, LoginResource, MeResource, auth_bp
+    from server.routes.image import UploadImageResource, ListImagesResource, TransformImageResource, DownloadImageResource, ImageDetailResource, image_bp
+except ImportError:
+    # When running from server directory
+    from config import create_app, db, api
+    from routes.user import UserResource, UserListResource, user_bp
+    from routes.auth import SignupResource, LoginResource, MeResource, auth_bp
+    from routes.image import UploadImageResource, ListImagesResource, TransformImageResource, DownloadImageResource, ImageDetailResource, image_bp
 from flask_jwt_extended import JWTManager
 import os
 from flask import send_from_directory, current_app
