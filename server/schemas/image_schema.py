@@ -1,5 +1,8 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
-from server.models.image import Image
+try:
+    from server.models.image import Image
+except ImportError:
+    from models.image import Image
 
 class ImageSchema(SQLAlchemyAutoSchema):
     class Meta:

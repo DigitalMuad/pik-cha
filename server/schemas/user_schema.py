@@ -1,6 +1,9 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import fields, validate
-from server.models.user import User
+try:
+    from server.models.user import User
+except ImportError:
+    from models.user import User
 
 class UserSchema(SQLAlchemyAutoSchema):
     class Meta:

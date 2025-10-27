@@ -1,4 +1,7 @@
-from server.extensions import db
+try:
+    from server.extensions import db
+except ImportError:
+    from extensions import db
 from datetime import datetime
 from uuid import uuid4
 
