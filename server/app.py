@@ -14,11 +14,17 @@ import os
 from flask import send_from_directory, current_app
 
 # Create app instance
-app = create_app("production") if os.getenv("FLASK_ENV") == "production" else create_app()
+print("Creating app instance...")
+env = os.getenv("FLASK_ENV", "development")
+print(f"FLASK_ENV: {env}")
+app = create_app("production") if env == "production" else create_app()
+print("App created successfully!")
 
 # Configure JWT
+print("Configuring JWT...")
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'pikcha-jwt-secret-key-2024')
 jwt = JWTManager(app)
+print("JWT configured!")
 
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix="/api/auth")
