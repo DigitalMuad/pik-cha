@@ -20,27 +20,46 @@ user_schema = UserSchema()
 
 class SignupResource(Resource):
     def post(self):
-        data = request.get_json()
-        email = data.get("email")
-        username = data.get("username")
-        password = data.get("password")
+        try:
+            data = request.get_json()
+            print(f"Signup request received: {data}")
+            
+            if not data:
+                return {"error": "No data provided"}, 400
+            
+            email = data.get("email")
+            username = data.get("username")
+            password = data.get("password")
 
-        if User.query.filter((User.email == email) | (User.username == username)).first():
-            return {"error": "Email or username already in use."}, 400
+            if not email or not username or not password:
+                return {"error": "Email, username, and password are required"}, 400
 
-        user = User(email=email, username=username)
-        user.set_password(password)
+            print(f"Creating user: {username}, {email}")
+            
+            if User.query.filter((User.email == email) | (User.username == username)).first():
+                return {"error": "Email or username already in use."}, 400
 
-        db.session.add(user)
-        db.session.commit()
+            user = User(email=email, username=username)
+            user.set_password(password)
 
-        access_token = generate_token(user.id)
+            db.session.add(user)
+            db.session.commit()
+            
+            print(f"User created successfully: {user.id}")
 
-        return {
-            "message": "User created successfully",
-            "user": user_schema.dump(user),
-            "access_token": access_token
-        }, 201
+            access_token = generate_token(user.id)
+
+            return {
+                "message": "User created successfully",
+                "user": user_schema.dump(user),
+                "access_token": access_token
+            }, 201
+        except Exception as e:
+            print(f"Error in signup: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            db.session.rollback()
+            return {"error": f"Signup failed: {str(e)}"}, 500
 
 class LoginResource(Resource):
     def post(self):
